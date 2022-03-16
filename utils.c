@@ -6,7 +6,7 @@
 /*   By: poscenes <poscenes@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/06 23:33:08 by poscenes          #+#    #+#             */
-/*   Updated: 2022/03/13 11:59:56 by poscenes         ###   ########.fr       */
+/*   Updated: 2022/03/16 14:46:25 by poscenes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,29 +18,29 @@ void	error(void)
 	exit(EXIT_FAILURE);
 }
 
-int	func_max(t_stack *stack)
+int	maxind(t_stack *stack)
 {
 	int	max;
 
-	max = stack->value;
+	max = stack->index;
 	while (stack)
 	{
-		if (stack->value > max)
-			max = stack->value;
+		if (max < stack->index)
+			max = stack->index;
 		stack = stack->next;
 	}
 	return (max);
 }
 
-int	func_min(t_stack *stack)
+int	minind(t_stack *stack)
 {
 	int	min;
 
-	min = 0;
+	min = stack->index;
 	while (stack)
 	{
-		if (stack->value < min)
-			min = stack->value;
+		if (min > stack->index)
+			min = stack->index;
 		stack = stack->next;
 	}
 	return (min);
@@ -48,18 +48,14 @@ int	func_min(t_stack *stack)
 
 int	is_sorted(t_stack *stack)
 {
-	int		size;
-
-	size = stack_len(stack);
-	if (!stack || !stack->next)
-		return (0);
 	while (stack->next)
 	{
-		if (stack->value > stack->next->value)
-			return (0);
-		stack = stack->next;
+		if ((stack->index + 1) == stack->next->index)
+			stack = stack->next;
+		else
+			return (1);
 	}
-	return (1);
+	return (0);
 }
 
 void	print(t_stack *stack)
@@ -67,7 +63,8 @@ void	print(t_stack *stack)
 	while (stack)
 	{
 		ft_putnbr_fd(stack->value, 1);
-		ft_putchar_fd('\n', 1);
+		ft_putchar_fd(' ', 1);
 		stack = stack->next;
 	}
+	ft_putchar_fd('\n', 1);
 }

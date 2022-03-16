@@ -6,76 +6,89 @@
 /*   By: poscenes <poscenes@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 19:09:05 by poscenes          #+#    #+#             */
-/*   Updated: 2022/03/13 11:03:32 by poscenes         ###   ########.fr       */
+/*   Updated: 2022/03/16 18:01:27 by poscenes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-void	sort_3(t_stack **stack)
+static void	sort_2(t_stack **s)
 {
-	int	max;
-	int	min;
-
-	max = func_max(*stack);
-	min = func_min(*stack);
-	while (!is_sorted(*stack))
-	{
-		if (max == (*stack)->value)
-		{
-			ra(stack, 1);
-			if ((*stack)->value > (*stack)->next->value)
-				sa(stack, 1);
-		}
-		else if (max == (*stack)->next->next->value)
-			sa(stack, 1);
-		else
-		{
-			rra(stack, 1);
-			if ((*stack)->value > (*stack)->next->value)
-				sa(stack, 1);
-		}
-	}
+	if ((*s)->next->index < (*s)->index)
+		sa(s, 1);
 }
 
-static void	find_n_rot(t_stack **stack, int (*f)(t_stack *))
+static void	sort_3(t_stack **s)
 {
-	while ((*stack)->value != f(*stack))
+	if ((*s)->index == maxind(*s))
+		ra(s, 1);
+	if ((*s)->index == minind(*s) && (*s)->next->index == maxind(*s))
 	{
-		if ((*stack)->next->value != f(*stack)
-			&& (*stack)->next->next->value != f(*stack))
-			rra(stack, 1);
-		else
-			ra(stack, 1);
+		rra(s, 1);
+		sa(s, 1);
 	}
+	if ((*s)->index != minind(*s) && (*s)->index > (*s)->next->index)
+		sa(s, 1);
+	if ((*s)->index != minind(*s) && (*s)->index < (*s)->next->index)
+		rra(s, 1);
 }
 
-static void	sort_45(t_stack **stack_a, t_stack **stack_b, int size)
+static void	sort_4(t_stack **a, t_stack **b)
 {
-	if (size == 5)
+	int	i;
+
+	i = 0;
+	while (i < 2)
 	{
-		find_n_rot(stack_a, func_min);
-		pb(stack_a, stack_b);
+		if ((*a)->index > minind(*a) && !compare(a, minind(*a), stack_len(*a)))
+			ra(a, 1);
+		else if ((*a)->index > minind(*a)
+			&& compare(a, minind(*a), stack_len(*a)))
+			rra(a, 1);
+		else
+		{
+			pb(a, b);
+			i++;
+		}
 	}
-	find_n_rot(stack_a, func_max);
-	pb(stack_a, stack_b);
-	while (stack_len(*stack_a) != 3)
-		pb(stack_a, stack_b);
-	sort_3(stack_a);
-	pa(stack_b, stack_a);
-	ra(stack_a, 1);
-	if (size == 5)
-		pa(stack_b, stack_a);
-	if (!is_sorted(*stack_a))
-		ra(stack_a, 1);
+	if ((*a)->index != minind(*a))
+		sa(a, 1);
+	while (*b)
+		pa(a, b);
+}
+
+static void	sort_5(t_stack **a, t_stack **b)
+{
+	int	i;
+
+	i = 0;
+	while (i < 3)
+	{
+		if ((*a)->index > minind(*a) && !compare(a, minind(*a), stack_len(*a)))
+			ra(a, 1);
+		else if ((*a)->index > minind(*a)
+			&& compare(a, minind(*a), stack_len(*a)))
+			rra(a, 1);
+		else
+		{
+			pb(a, b);
+			i++;
+		}
+	}
+	if ((*a)->index != minind(*a))
+		sa(a, 1);
+	while (*b)
+		pa(a, b);
 }
 
 void	sort5ex(t_stack **stack_a, t_stack **stack_b, int size)
 {
 	if (size == 2)
-		sa(stack_a, 1);
+		sort_2(stack_a);
 	else if (size == 3)
 		sort_3(stack_a);
-	else
-		sort_45(stack_a, stack_b, size);
+	else if (size == 4)
+		sort_4(stack_a, stack_b);
+	else if (size == 5)
+		sort_5(stack_a, stack_b);
 }

@@ -6,7 +6,7 @@
 /*   By: poscenes <poscenes@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 15:29:21 by poscenes          #+#    #+#             */
-/*   Updated: 2022/03/13 11:47:55 by poscenes         ###   ########.fr       */
+/*   Updated: 2022/03/16 17:51:35 by poscenes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,76 +14,57 @@
 
 void	init_stack(t_stack **stack_a, int ac, char **av)
 {
-	int	i;
-
-	i = 1;
-	while (i < ac)
+	while (ac != 1)
 	{
-		stack_add_back(stack_a, stack_new(ft_atoi(av[i])));
-		i++;
+		stack_add(stack_a, stack_new(ft_atoi(av[ac - 1])));
+		ac--;
 	}
 }
 
-int	*index_arr(t_stack *stack, int *arr)
+void	stack_index(t_stack **s, int size)
 {
-	int	i;
+	t_stack		*tmp;
+	int			k;
+	int			*arr;
+	int			*arr1;
 
-	if (!stack || !arr)
-		return (NULL);
+	k = 0;
+	tmp = *s;
+	arr = malloc(sizeof(int) * (size + 1));
+	arr1 = malloc(sizeof(int) * (size + 1));
+	if (!arr || !arr1)
+		return ;
+	arr = make_arr_val(tmp, arr);
+	arr1 = arr_copy(arr, arr1, size);
+	arr = sort_arr(arr, size);
+	while (tmp)
+	{
+		tmp->index = find_ind(arr, arr1[k]);
+		tmp = tmp->next;
+		k++;
+	}
+	free(arr);
+	free(arr1);
+}
+
+int	compare(t_stack **s, int index, int i)
+{
+	int		k;
+	int		*arr;
+
+	arr = malloc(sizeof(int) * (i + 1));
+	if (!arr)
+		return (0);
+	arr = make_arr_ind(*s, arr);
+	k = i;
+	while (arr[i] != index)
+		i--;
+	k = k - i;
 	i = 0;
-	while (stack)
-	{
-		arr[i] = stack->index;
-		stack = stack->next;
+	while (arr[i] != index)
 		i++;
-	}
-	return (arr);
-}
-
-int	find_index(int elem, int *sort)
-{
-	int	i;
-
-	i = 0;
-	while (sort[i] != elem)
-		i++;
-	return (i);
-}
-
-void	index_stack(t_stack	**stack)
-{
-	int		*arr_sort;
-	int		*arr_nosort;
-	int		i;
-	t_stack	*tmp;
-
-	arr_sort = make_arr(*stack);
-	arr_nosort = sort_arr(*stack);
-	tmp = *stack;
-	i = 0;
-	while (*stack)
-	{
-		(*stack)->index = find_index(arr_nosort[i], arr_sort);
-		*stack = (*stack)->next;
-		i++;
-	}
-	free(arr_nosort);
-	free(arr_sort);
-	*stack = tmp;
-}
-
-int	max_index(t_stack **stack)
-{
-	int		ind;
-	t_stack	*tmp;
-
-	ind = (*stack)->index;
-	while (*stack)
-	{
-		if (ind < (*stack)->index)
-			ind = (*stack)->index;
-		*stack = (*stack)->next;
-	}
-	*stack = tmp;
-	return (ind);
+	free(arr);
+	if (k < i)
+		return (1);
+	return (0);
 }

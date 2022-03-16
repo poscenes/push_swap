@@ -6,7 +6,7 @@
 /*   By: poscenes <poscenes@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 12:51:30 by poscenes          #+#    #+#             */
-/*   Updated: 2022/03/13 10:51:11 by poscenes         ###   ########.fr       */
+/*   Updated: 2022/03/16 14:43:44 by poscenes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,12 @@ t_stack	*stack_last(t_stack *stack)
 	return (stack);
 }
 
-void	stack_add_back(t_stack **stack, t_stack *new)
+void	stack_add(t_stack **stack, t_stack *new_elem)
 {
-	if (!(*stack))
-		*stack = new;
-	else
-		stack_last(*stack)->next = new;
+	if (!stack && !new_elem)
+		return ;
+	new_elem->next = *stack;
+	*stack = new_elem;
 }
 
 void	stack_clear(t_stack *stack)

@@ -6,86 +6,80 @@
 /*   By: poscenes <poscenes@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 09:57:47 by poscenes          #+#    #+#             */
-/*   Updated: 2022/03/13 12:03:07 by poscenes         ###   ########.fr       */
+/*   Updated: 2022/03/16 18:00:54 by poscenes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-static void	sort_to_pusha(t_stack **stack_a, t_stack **stack_b)
+static void	sort_push_a(t_stack **a, t_stack **b)
 {
-	while (*stack_b)
+	while (*b)
 	{
-		if (!stack_b)
+		if (!b)
 			break ;
-		if ((*stack_b)->index != max_index(stack_b)
-			&& !compare(stack_b, max_index(stack_b), stack_len(*stack_b)))
-			rb(stack_b, 1);
-		else if ((*stack_b)->index != max_index(stack_b)
-			&& compare(stack_b, max_index(stack_b), stack_len(*stack_b)))
-			rrb(stack_b, 1);
-		else if ((*stack_b)->index == max_index(stack_b))
-			pa(stack_b, stack_a);
+		if ((*b)->index != maxind(*b) && !compare(b, maxind(*b), stack_len(*b)))
+			rb(b, 1);
+		else if ((*b)->index != maxind(*b)
+			&& compare(b, maxind(*b), stack_len(*b)))
+			rrb(b, 1);
+		else if ((*b)->index == maxind(*b))
+			pa(a, b);
 	}
 }
 
-static void	sort_100(t_stack **stack_a, t_stack **stack_b)
+static void	sort_100(t_stack **a, t_stack **b)
 {
-	int	n;
+	int	i;
 
-	n = 0;
-	while (*stack_a)
+	i = 0;
+	while (*a)
 	{
-		if (n > 1 && (*stack_a)->index <= n)
+		if (i > 1 && (*a)->index <= i)
 		{
-			pb(stack_a, stack_b);
-			n++;
-			rb(stack_b, 1);
+			pb(a, b);
+			i++;
+			rb(b, 1);
 		}
-		else if ((*stack_a)->index <= n + 15)
+		else if ((*a)->index <= i + 15)
 		{
-			pb(stack_a, stack_b);
-			n++;
+			pb(a, b);
+			i++;
 		}
-		else if ((*stack_a)->index >= n)
-		{
-			ra(stack_a, 1);
-		}
+		else if ((*a)->index >= i)
+			ra(a, 1);
 	}
-	sort_to_pusha(stack_a, stack_b);
+	sort_push_a(a, b);
 }
 
-static void	sort_500(t_stack **stack_a, t_stack **stack_b)
+static void	sort_500(t_stack **a, t_stack **b)
 {
-	int	n;
+	int	i;
 
-	n = 0;
-	while (*stack_a)
+	i = 0;
+	while (*a)
 	{
-		if (n > 1 && (*stack_a)->index <= n)
+		if (i > 1 && (*a)->index <= i)
 		{
-			pb(stack_a, stack_b);
-			n++;
-			rb(stack_b, 1);
+			pb(a, b);
+			i++;
+			rb(b, 1);
 		}
-		else if ((*stack_a)->index <= n + 30)
+		else if ((*a)->index <= i + 30)
 		{
-			pb(stack_a, stack_b);
-			n++;
+			pb(a, b);
+			i++;
 		}
-		else if ((*stack_a)->index >= n)
-		{
-			ra(stack_a, 1);
-		}
+		else if ((*a)->index >= i)
+			ra(a, 1);
 	}
-	sort_to_pusha(stack_a, stack_b);
+	sort_push_a(a, b);
 }
 
-void	long_sort(t_stack **stack_a, t_stack **stack_b)
+void	longsort(t_stack **a, t_stack **b, int size)
 {
-	index_stack(stack_a);
-	if (stack_len(*stack_a) <= 100)
-		sort_100(stack_a, stack_b);
+	if (size <= 100)
+		sort_100(a, b);
 	else
-		sort_500(stack_a, stack_b);
+		sort_500(a, b);
 }
